@@ -5,15 +5,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, LayoutPanelTop } from "lucide-react";
 
 // Section Components
-
-
-import Testimonials from "../app/components/Testimonials";
-import Footer from "../app/components/Footer";
+import Hero from "@/components/Hero";
+import Features from "@/components/Features";
+import Testimonials from "@/components/Testimonials";
+import Footer from "@/components/Footer";
 
 // UI Components
-import Modal from "../app/components/Modal";
-import Sidebar from "../app/components/Sidebar";
-import Accordion from "../app/components/Accordion";
+import Modal from "@/components/Modal";
+import Sidebar from "@/components/Sidebar";
+import Accordion from "@/components/Accordion";
 
 export default function Home() {
   const [modalOpen, setModalOpen] = useState(false);
