@@ -5,6 +5,7 @@ import {
   useContext,
   useEffect,
   useState,
+  ReactNode,
 } from "react";
 
 // Context initialize karein (Default values ke saath)
@@ -13,7 +14,7 @@ export const ThemeContext = createContext({
   toggleTheme: () => {},
 });
 
-export function ThemeProvider({ children }) {
+export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState("dark");
   const [mounted, setMounted] = useState(false);
 

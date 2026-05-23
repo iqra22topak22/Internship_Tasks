@@ -12,19 +12,15 @@ import {
   ArrowLeft,
   Zap,
   Settings,
-  LogOut
+  LogOut,
+  Menu,
+  X
 } from 'lucide-react';
+import { useTheme } from "@/components/ThemeProvider";
 
 export default function SettingsPage() {
-  const [isDarkMode, setIsDarkMode] = useState(true);
-
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [isDarkMode]);
+  const { theme } = useTheme();
+  const isDarkMode = theme === "dark";
 
   const sections = [
     { id: 'profile', label: 'Account Profile', icon: <User size={18} />, color: 'text-blue-500' },
@@ -33,40 +29,20 @@ export default function SettingsPage() {
     { id: 'language', label: 'Language & Region', icon: <Globe size={18} />, color: 'text-emerald-500' },
   ];
 
+  const navLinks = [
+    { name: 'Home', href: '/' },
+    { name: 'Dashboard', href: '/dashboard' },
+    { name: 'About', href: '/about' },
+    { name: 'Services', href: '/services' },
+    { name: 'Live Feed', href: '/realtime-ui' },
+    { name: 'UI Docs', href: '/ui-docs' },
+    { name: 'Form', href: '/multistep-form' },
+    { name: 'Settings', href: '/settings' },
+  ];
+
   return (
     <div className={`min-h-screen transition-colors duration-500 font-sans ${isDarkMode ? 'bg-[#020617] text-white' : 'bg-slate-50 text-slate-900'}`}>
       
-      {/* Navbar */}
-      <nav className={`fixed top-0 w-full z-50 border-b backdrop-blur-xl transition-colors duration-300 ${isDarkMode ? 'border-white/5 bg-[#020617]/70' : 'border-slate-200 bg-white/70'}`}>
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2 group cursor-pointer">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
-              <Zap className="w-5 h-5 text-white fill-white" />
-            </div>
-            <span className="text-xl font-black tracking-tighter uppercase">
-              Core<span className="text-blue-500">.</span>AI
-            </span>
-          </div>
-
-          <div className="hidden md:flex items-center gap-8">
-            <a href="/" className={`text-xs font-bold uppercase tracking-widest transition-colors ${isDarkMode ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-blue-600'}`}>Home</a>
-            <a href="/dashboard" className={`text-xs font-bold uppercase tracking-widest transition-colors ${isDarkMode ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-blue-600'}`}>Dashboard</a>
-            <a href="/about" className={`text-xs font-bold uppercase tracking-widest transition-colors ${isDarkMode ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-blue-600'}`}>About</a>
-            <a href="/services" className={`text-xs font-bold uppercase tracking-widest transition-colors ${isDarkMode ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-blue-600'}`}>Services</a>
-            <a href="/realtime-ui" className={`text-xs font-bold uppercase tracking-widest transition-colors ${isDarkMode ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-blue-600'}`}>Live Feed</a>
-            <a href="/ui-docs" className={`text-xs font-bold uppercase tracking-widest transition-colors ${isDarkMode ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-blue-600'}`}>UI Docs</a>
-            <a href="/multistep-form" className={`text-xs font-bold uppercase tracking-widest transition-colors ${isDarkMode ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-blue-600'}`}>Form</a>
-            <a href="/settings" className={`text-xs font-bold uppercase tracking-widest transition-colors ${isDarkMode ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-blue-600'}`}>Settings</a>
-            <a href="/Live Feed" className={`text-xs font-bold uppercase tracking-widest transition-colors ${isDarkMode ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-blue-600'}`}>Live Feed</a>
-            <div className="h-4 w-[1px] bg-slate-700/30" />
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 border-2 border-white/10" />
-              <span className="text-xs font-black uppercase tracking-tighter italic">Alex Rivera</span>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       {/* Background Decor */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className={`absolute top-0 right-0 w-[50%] h-[40%] rounded-full blur-[120px] opacity-10 transition-colors duration-700 ${isDarkMode ? 'bg-indigo-600' : 'bg-blue-200'}`} />

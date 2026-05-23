@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { 
   ChevronRight, 
@@ -12,18 +12,23 @@ import {
   Search,
   Bell,
   Sun,
-  Moon
+  Moon,
+  Menu,
+  X
 } from "lucide-react";
 
 import Sidebar from "@/components/dashboard/Sidebar";
 import StatsCards from "@/components/dashboard/StatsCards";
 import SalesChart from "@/components/dashboard/SalesChart";
 import UsersTable from "@/components/dashboard/UsersTable";
+import { useTheme } from "@/components/ThemeProvider";
 
 export default function DashboardPage() {
-  const [isDark, setIsDark] = useState(true);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   return (
+    // FIX 1: Corrected string quotes and interpolation spacing right here
     <div className={`flex min-h-screen transition-colors duration-500 selection:bg-blue-500/30 overflow-x-hidden ${isDark ? 'bg-[#020617] text-slate-300' : 'bg-slate-50 text-slate-600'}`}>
       
       {/* 1. AMBIENT BACKGROUND SYSTEM */}
@@ -38,43 +43,8 @@ export default function DashboardPage() {
       </aside>
 
       {/* 3. MAIN WORKSPACE */}
-      <div className="flex-1 lg:ml-72 flex flex-col min-h-screen relative z-10">
+      <div className="flex-1 lg:ml-72 flex flex-col min-h-screen relative z-10 pt-20">
         
-        {/* PREMIUM INTEGRATED NAVBAR */}
-        <header className={`sticky top-0 z-40 backdrop-blur-md border-b transition-all px-8 py-4 ${isDark ? 'bg-[#020617]/60 border-white/5' : 'bg-white/80 border-slate-200 shadow-sm'}`}>
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
-            
-            {/* Breadcrumb Navigation */}
-            <nav className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500">
-              <Link href="/" className={`transition-colors flex items-center gap-1.5 group ${isDark ? 'hover:text-blue-500' : 'hover:text-blue-600'}`}>
-                <Home size={13} className="group-hover:-translate-y-0.5 transition-transform" />
-                Root
-              </Link>
-              <ChevronRight size={12} className={isDark ? 'text-slate-800' : 'text-slate-300'} />
-              <span className={isDark ? 'text-slate-200' : 'text-slate-900'}>Analytics Dashboard</span>
-            </nav>
-
-            {/* Quick Link Navigation */}
-            <div className="hidden md:flex items-center gap-2 p-1 rounded-xl border transition-all">
-              <Link href="/multistep-form" className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${isDark ? 'hover:bg-white/5' : 'hover:bg-slate-100'}`}>Form</Link>
-              <Link href="/ui-docs" className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${isDark ? 'hover:bg-white/5' : 'hover:bg-slate-100'}`}>UI Library</Link>
-              <Link href="/realtime-ui" className="px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-blue-600 text-white shadow-lg shadow-blue-600/20">Realtime</Link>
-            </div>
-
-            {/* User Actions & Mood Toggle */}
-            <div className="flex items-center gap-4">
-              <button 
-                onClick={() => setIsDark(!isDark)}
-                className={`p-2 rounded-lg transition-all ${isDark ? 'text-yellow-400 hover:bg-white/5' : 'text-indigo-600 hover:bg-slate-100'}`}
-              >
-                {isDark ? <Sun size={18} /> : <Moon size={18} />}
-              </button>
-              
-              <div className={`h-8 w-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 border ${isDark ? 'border-white/10' : 'border-slate-200 shadow-sm'}`} />
-            </div>
-          </div>
-        </header>
-
         <main className="flex-1 p-8 space-y-10 max-w-7xl mx-auto w-full">
           
           {/* WELCOME SECTION */}
@@ -129,6 +99,7 @@ export default function DashboardPage() {
               <motion.div 
                 className={`border rounded-[32px] p-2 overflow-hidden transition-all ${isDark ? 'bg-white/[0.01] border-white/5' : 'bg-white border-slate-200 shadow-sm'}`}
               >
+                {/* FIX 2: Removed broken `<幻想Table>` tag here */}
                 <UsersTable theme={isDark ? 'dark' : 'light'} />
               </motion.div>
             </div>

@@ -6,13 +6,15 @@ import Link from "next/link";
 import { 
   Bell, Trash2, Zap, Cpu, Clock, 
   LayoutGrid, Home, Settings, Radio,
-  Sun, Moon
+  Sun, Moon, Menu, X
 } from "lucide-react";
+import { useTheme } from "@/components/ThemeProvider";
 
 export default function RealtimeUI() {
   const [notifications, setNotifications] = useState([]);
   const [count, setCount] = useState(1);
-  const [isDark, setIsDark] = useState(true);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -38,27 +40,6 @@ export default function RealtimeUI() {
   return (
     <div className={`min-h-screen flex flex-col items-center transition-colors duration-500 selection:bg-blue-500/30 overflow-x-hidden relative ${isDark ? 'bg-[#020617] text-slate-300' : 'bg-slate-50 text-slate-600'}`}>
       
-      {/* 1. FLOATING GLASS NAVBAR */}
-      <nav className="fixed top-6 z-[100] px-4 w-full max-w-xl">
-        <div className={`backdrop-blur-xl border rounded-2xl p-1.5 flex items-center justify-between shadow-2xl transition-all ${isDark ? 'bg-slate-900/40 border-white/10' : 'bg-white/80 border-slate-200 shadow-slate-200/50'}`}>
-          <div className="flex items-center gap-1">
-            <Link href="/" className={`p-2.5 rounded-xl transition-colors ${isDark ? 'text-slate-400 hover:text-white hover:bg-white/5' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}><Home size={18} /></Link>
-            <div className={`h-4 w-[1px] mx-1 ${isDark ? 'bg-white/10' : 'bg-slate-200'}`} />
-            <Link href="/dashboard" className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${isDark ? 'text-slate-400 hover:text-white hover:bg-white/5' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}>Dashboard</Link>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <button 
-              onClick={() => setIsDark(!isDark)}
-              className={`p-2 rounded-xl transition-all ${isDark ? 'text-yellow-400 hover:bg-white/5' : 'text-indigo-600 hover:bg-slate-100'}`}
-            >
-              {isDark ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
-            <Link href="/realtime-ui" className="bg-blue-600 px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest text-white shadow-lg shadow-blue-600/20">Live</Link>
-          </div>
-        </div>
-      </nav>
-
       {/* 2. ATMOSPHERIC ELEMENTS */}
       <div className="fixed inset-0 pointer-events-none">
         <div className={`absolute top-[-10%] right-[-10%] h-[600px] w-[600px] rounded-full blur-[120px] transition-opacity duration-1000 ${isDark ? 'bg-blue-600/[0.03]' : 'bg-blue-400/[0.08]'}`} />

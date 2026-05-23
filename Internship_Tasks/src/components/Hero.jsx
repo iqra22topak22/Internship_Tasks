@@ -32,7 +32,7 @@ export default function Hero() {
         )}
       </div>
 
-      <div className="container relative z-10 px-6 flex flex-col items-center">
+      <div className="container relative z-10 px-6 pt-32 flex flex-col items-center">
         {/* Modern Badge */}
         <div className={`mb-8 flex animate-fade-in items-center gap-2 rounded-full border px-4 py-1.5 backdrop-blur-md transition-all duration-500 ${
           theme === "dark"

@@ -5,16 +5,18 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { 
   LayoutGrid, FileText, Component, Activity, Home, HelpCircle, 
-  Sun, Moon // Added for Theme Toggle
+  Sun, Moon, Menu, X 
 } from "lucide-react";
 import StepOne from "@/components/forms/StepOne";
 import StepTwo from "@/components/forms/StepTwo";
 import StepThree from "@/components/forms/StepThree";
+import { useTheme } from "@/components/ThemeProvider";
 
 export default function MultiStepForm() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({ name: "", email: "", age: "" });
-  const [isDark, setIsDark] = useState(true); // Theme State
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   useEffect(() => {
     const saved = localStorage.getItem("formData");
@@ -32,29 +34,6 @@ export default function MultiStepForm() {
   return (
     <div className={`min-h-screen flex flex-col transition-colors duration-500 selection:bg-blue-500/30 overflow-hidden relative ${isDark ? 'bg-[#020617] text-slate-300' : 'bg-slate-50 text-slate-600'}`}>
       
-      {/* 1. INTEGRATED FLOATING NAVBAR */}
-      <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-2xl">
-        <div className={`backdrop-blur-xl border rounded-2xl p-2 flex items-center justify-between shadow-2xl transition-all ${isDark ? 'bg-slate-900/40 border-white/10' : 'bg-white/80 border-slate-200 shadow-slate-200/50'}`}>
-          <div className="flex items-center gap-1">
-            <NavLink href="/" icon={Home} label="Home" active isDark={isDark} />
-            <NavLink href="/dashboard" icon={LayoutGrid} label="Dashboard" isDark={isDark} />
-            <NavLink href="/ui-docs" icon={Component} label="UI Library" isDark={isDark} />
-          </div>
-          
-          <div className="flex items-center gap-3 pr-2">
-            <button 
-              onClick={() => setIsDark(!isDark)}
-              className={`p-2 rounded-xl transition-all ${isDark ? 'text-yellow-400 hover:bg-white/5' : 'text-indigo-600 hover:bg-slate-100'}`}
-            >
-              {isDark ? <Sun size={16} /> : <Moon size={16} />}
-            </button>
-            <div className="hidden sm:block">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Secure</span>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       {/* 2. AMBIENT ATMOSPHERE */}
       <div className="absolute inset-0 pointer-events-none">
         <div className={`absolute top-[-10%] left-[-10%] h-[600px] w-[600px] rounded-full blur-[120px] transition-opacity duration-1000 ${isDark ? 'bg-blue-600/5' : 'bg-blue-400/10'}`} />
@@ -130,11 +109,12 @@ export default function MultiStepForm() {
   );
 }
 
-function NavLink({ href, icon: Icon, label, active = false, isDark }) {
+function NavLink({ href, icon: Icon, label, active = false, isDark, onClick }) {
   return (
     <Link 
       href={href}
-      className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+      onClick={onClick}
+      className={`flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold w-full md:w-auto transition-all ${
         active 
         ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20" 
         : isDark 
@@ -142,8 +122,8 @@ function NavLink({ href, icon: Icon, label, active = false, isDark }) {
           : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
       }`}
     >
-      <Icon size={14} />
-      <span className="hidden md:inline">{label}</span>
+      <Icon size={15} />
+      <span>{label}</span>
     </Link>
   );
 }

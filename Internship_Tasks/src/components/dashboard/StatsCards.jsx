@@ -2,8 +2,11 @@
 
 import { motion } from "framer-motion";
 import { Users, DollarSign, ShoppingBag, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { useTheme } from "@/components/ThemeProvider";
 
 export default function StatsCards() {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   const cards = [
     { 
       title: "Total Users", 
@@ -56,13 +59,21 @@ export default function StatsCards() {
           key={index}
           variants={cardVariants}
           whileHover={{ y: -5, transition: { duration: 0.2 } }}
-          className="relative group overflow-hidden rounded-3xl border border-white/5 bg-[#0b0f1a]/40 p-6 backdrop-blur-xl transition-all hover:bg-[#0b0f1a]/60 hover:border-white/10 shadow-2xl"
+          className={`relative group overflow-hidden rounded-3xl border transition-all p-6 backdrop-blur-xl shadow-2xl ${
+            isDark 
+              ? "bg-[#0b0f1a]/40 border-white/5 hover:bg-[#0b0f1a]/60 hover:border-white/10" 
+              : "bg-white border-gray-200 hover:shadow-xl hover:border-blue-200"
+          }`}
         >
           {/* Decorative Background Glow */}
-          <div className="absolute -right-8 -top-8 h-24 w-24 bg-white/5 blur-3xl group-hover:bg-blue-500/10 transition-colors duration-500" />
+          <div className={`absolute -right-8 -top-8 h-24 w-24 blur-3xl group-hover:bg-blue-500/10 transition-colors duration-500 ${
+            isDark ? "bg-white/5" : "bg-blue-500/5"
+          }`} />
 
           <div className="flex items-center justify-between mb-4">
-            <div className={`p-3 rounded-2xl bg-white/5 text-gray-400 group-hover:text-white transition-colors`}>
+            <div className={`p-3 rounded-2xl transition-colors ${
+              isDark ? "bg-white/5 text-gray-400 group-hover:text-white" : "bg-gray-100 text-gray-500 group-hover:text-blue-600"
+            }`}>
               {card.icon}
             </div>
             

@@ -6,18 +6,20 @@ import Link from "next/link";
 import { 
   Package, MousePointer2, CreditCard, Type, 
   BellRing, Home, LayoutGrid, Layers, Cpu, Zap,
-  Sun, Moon // Added Icons
+  Sun, Moon, Menu, X
 } from "lucide-react";
 
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
 import Toast from "@/components/ui/Toast";
+import { useTheme } from "@/components/ThemeProvider";
 
 export default function DocsPage() {
   const [showToast, setShowToast] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const [isDark, setIsDark] = useState(true); // Theme State
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   // Section Header logic with dynamic colors
   const sectionHeader = (icon, title) => (
@@ -34,35 +36,7 @@ export default function DocsPage() {
   return (
     <div className={`min-h-screen transition-colors duration-500 ease-in-out overflow-x-hidden relative ${isDark ? 'bg-[#020617] text-slate-300' : 'bg-slate-50 text-slate-800'}`}>
       
-      {/* 1. FLOATING NEURAL NAVBAR */}
-      <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] w-[90%] max-w-4xl">
-        <div className={`backdrop-blur-2xl border rounded-2xl p-1.5 flex items-center justify-between shadow-2xl transition-all ${isDark ? 'bg-slate-900/60 border-white/10 shadow-black/50' : 'bg-white/70 border-slate-200 shadow-slate-200/50'}`}>
-          <div className="flex items-center gap-1">
-            <Link href="/" className={`p-2.5 rounded-xl transition-all ${isDark ? 'hover:bg-white/5 text-slate-400 hover:text-white' : 'hover:bg-slate-100 text-slate-500 hover:text-slate-900'}`}>
-              <Home size={18} />
-            </Link>
-            <div className={`h-4 w-[1px] mx-1 ${isDark ? 'bg-white/10' : 'bg-slate-200'}`} />
-            <Link href="/dashboard" className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${isDark ? 'text-slate-400 hover:text-white hover:bg-white/5' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}>Dashboard</Link>
-            <Link href="/multistep-form" className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${isDark ? 'text-slate-400 hover:text-white hover:bg-white/5' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}>Forms</Link>
-          </div>
-          
-          <div className="flex items-center gap-4 pr-2">
-            {/* 🌙 THEME TOGGLE SWITCH */}
-            <button 
-              onClick={() => setIsDark(!isDark)}
-              className={`p-2 rounded-lg transition-all ${isDark ? 'bg-white/5 text-yellow-400 hover:bg-white/10' : 'bg-slate-100 text-indigo-600 hover:bg-slate-200'}`}
-            >
-              {isDark ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
-            <div className="hidden sm:flex items-center gap-2 text-blue-500">
-               <Zap size={14} fill="currentColor" />
-               <span className="text-[10px] font-black uppercase tracking-widest">v1.0</span>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      {/* 2. ATMOSPHERIC BACKGROUND (Updated for Light Mode) */}
+      {/* ATMOSPHERIC BACKGROUND */}
       <div className="fixed inset-0 pointer-events-none">
         <div className={`absolute top-[-20%] left-[-10%] h-[800px] w-[800px] rounded-full blur-[150px] transition-opacity duration-1000 ${isDark ? 'bg-blue-600/[0.03] opacity-100' : 'bg-blue-400/[0.08] opacity-50'}`} />
         <div className={`absolute bottom-[-10%] right-[-10%] h-[600px] w-[600px] rounded-full blur-[120px] transition-opacity duration-1000 ${isDark ? 'bg-indigo-600/[0.03] opacity-100' : 'bg-indigo-400/[0.08] opacity-50'}`} />
@@ -70,7 +44,7 @@ export default function DocsPage() {
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 pt-32 pb-20">
         
-        {/* 3. HERO SECTION */}
+        {/* HERO SECTION */}
         <header className="mb-32 relative">
           <motion.div className="flex items-center gap-3 text-blue-500 font-bold text-[10px] uppercase tracking-[0.5em] mb-6">
             <Layers size={14} />
@@ -88,23 +62,24 @@ export default function DocsPage() {
           </div>
         </header>
 
-        {/* 4. COMPONENT GRID */}
+        {/* COMPONENT GRID */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
           
           <aside className="hidden lg:block lg:col-span-3 sticky top-40 h-fit space-y-8">
-             <div className="space-y-4">
-               <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Categories</p>
-               <nav className="flex flex-col gap-2">
-                 {['Interactions', 'Containers', 'Inputs'].map((nav) => (
-                   <button key={nav} className={`text-left py-2 px-4 rounded-xl transition-all text-sm font-medium ${isDark ? 'text-slate-400 hover:bg-white/5 hover:text-white' : 'text-slate-500 hover:bg-slate-200/50 hover:text-slate-900'}`}>
-                     {nav}
-                   </button>
-                 ))}
-               </nav>
-             </div>
+            <div className="space-y-4">
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Categories</p>
+              <nav className="flex flex-col gap-2">
+                {['Interactions', 'Containers', 'Inputs'].map((nav) => (
+                  <button key={nav} className={`text-left py-2 px-4 rounded-xl transition-all text-sm font-medium ${isDark ? 'text-slate-400 hover:bg-white/5 hover:text-white' : 'text-slate-500 hover:bg-slate-200/50 hover:text-slate-900'}`}>
+                    {nav}
+                  </button>
+                ))}
+              </nav>
+            </div>
           </aside>
 
           <div className="lg:col-span-9 space-y-32">
+            
             {/* BUTTONS */}
             <section>
               {sectionHeader(<MousePointer2 size={18} />, "Interactive Elements")}
@@ -123,7 +98,7 @@ export default function DocsPage() {
                 <Card 
                   title="RAG Pipeline" 
                   description="Retrieval-Augmented Generation performance metrics." 
-                  theme={isDark ? 'dark' : 'light'} // Pass theme prop if your Card supports it
+                  theme={isDark ? 'dark' : 'light'} 
                 />
                 <Card 
                   title="Agentic Reasoner" 
@@ -132,10 +107,11 @@ export default function DocsPage() {
                 />
               </div>
             </section>
+
           </div>
         </div>
 
-        {/* 5. FOOTER */}
+        {/* FOOTER */}
         <footer className={`mt-40 pt-16 border-t flex flex-col md:flex-row justify-between items-center gap-8 ${isDark ? 'border-white/5' : 'border-slate-200'}`}>
           <div className="flex items-center gap-3">
             <div className="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-xs italic">IM</div>
