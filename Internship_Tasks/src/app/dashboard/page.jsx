@@ -43,7 +43,7 @@ export default function DashboardPage() {
       </aside>
 
       {/* 3. MAIN WORKSPACE */}
-      <div className="flex-1 lg:ml-72 flex flex-col min-h-screen relative z-10 pt-20">
+      <div className="flex-1 lg:ml-72 flex flex-col min-h-screen relative z-10 pt-20 md:pt-20">
         
         <main className="flex-1 p-8 space-y-10 max-w-7xl mx-auto w-full">
           
@@ -99,7 +99,7 @@ export default function DashboardPage() {
               <motion.div 
                 className={`border rounded-[32px] p-2 overflow-hidden transition-all ${isDark ? 'bg-white/[0.01] border-white/5' : 'bg-white border-slate-200 shadow-sm'}`}
               >
-                {/* FIX 2: Removed broken `<幻想Table>` tag here */}
+                {/* FIX 2: Removed broken Table tag here */}
                 <UsersTable theme={isDark ? 'dark' : 'light'} />
               </motion.div>
             </div>

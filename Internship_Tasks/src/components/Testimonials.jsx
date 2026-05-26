@@ -1,10 +1,13 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
+import { Quote } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
 
 export default function Testimonials() {
   const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   const testimonials = [
     {
@@ -30,82 +33,136 @@ export default function Testimonials() {
     },
   ];
 
-  return (
-    <section className={`relative overflow-hidden py-24 transition-colors duration-500 ${
-      theme === "dark" ? "bg-[#030712]" : "bg-gray-50"
-    }`}>
-      {/* Decorative Background Elements */}
-      {theme === "dark" && (
-        <div className="absolute left-1/2 top-0 h-[300px] w-full -translate-x-1/2 bg-blue-600/10 blur-[120px]" />
-      )}
+  // Animation variants for smooth orchestration
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.15 },
+    },
+  };
 
-      <div className="container relative z-10 mx-auto px-6">
-        <div className="mb-16 text-center">
-          <h2 className="text-sm font-bold tracking-[0.2em] text-blue-500 uppercase mb-4">
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+    },
+  };
+
+  return (
+    <section
+      className={`relative overflow-hidden py-32 transition-colors duration-1000 ${
+        isDark ? "bg-[#030712]" : "bg-slate-50"
+      }`}
+    >
+      {/* ATMOSPHERIC LAYER */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        {isDark && (
+          <div className="absolute left-1/2 top-10 h-[400px] w-full max-w-7xl -translate-x-1/2 bg-indigo-500/5 blur-[130px]" />
+        )}
+        <div 
+          className={`absolute inset-0 opacity-[0.012] ${isDark ? "invert-0" : "invert"}`} 
+          style={{ backgroundImage: `radial-gradient(#fff 1px, transparent 1px)`, backgroundSize: '32px 32px' }}
+        />
+      </div>
+
+      <div className="max-w-7xl relative z-10 mx-auto px-4 sm:px-6">
+        {/* HEADER SECTION */}
+        <div className="mb-20 text-center space-y-3">
+          <span
+            className={`inline-block px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.3em] backdrop-blur-md ${
+              isDark
+                ? "bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                : "bg-blue-50 text-blue-600 border border-blue-100"
+            }`}
+          >
             Wall of Love
-          </h2>
-          <h3 className={`text-4xl font-bold sm:text-5xl transition-colors duration-500 ${
-            theme === "dark" ? "text-white" : "text-gray-900"
-          }`}>
-            Trusted by the best in the industry.
+          </span>
+          <h3
+            className={`text-3xl sm:text-5xl font-black tracking-tighter transition-colors max-w-2xl mx-auto ${
+              isDark ? "text-white" : "text-slate-900"
+            }`}
+          >
+            Trusted by the best builders in the industry
           </h3>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-3">
+        {/* CARDS GRID */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-80px" }}
+          className="grid gap-8 md:grid-cols-3"
+        >
           {testimonials.map((t, i) => (
-            <div
+            <motion.div
               key={i}
-              className={`group relative flex flex-col justify-between rounded-3xl border p-8 transition-all duration-500 ${
-                theme === "dark"
-                  ? "border-white/5 bg-white/5 hover:border-white/20 hover:bg-white/[0.08]"
-                  : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-lg"
+              variants={cardVariants}
+              whileHover={{ y: -6, scale: 1.01 }}
+              className={`group relative flex flex-col justify-between rounded-[24px] border p-8 transition-all duration-500 backdrop-blur-xl ${
+                isDark
+                  ? "border-white/[0.04] bg-gradient-to-b from-white/[0.03] to-transparent hover:border-white/15 hover:bg-white/[0.06] shadow-2xl shadow-black/20"
+                  : "border-slate-200/80 bg-white hover:border-slate-300 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)]"
               }`}
             >
-              {/* Quote Icon */}
-              <div className="mb-6 text-4xl text-blue-500/30 font-serif group-hover:text-blue-500/60 transition-colors">
-                "
+              <div>
+                {/* Quote Icon */}
+                <div
+                  className={`mb-6 p-2.5 w-10 h-10 rounded-xl flex items-center justify-center border transition-all duration-500 ${
+                    isDark
+                      ? "bg-white/[0.02] border-white/5 text-blue-400/40 group-hover:text-blue-400 group-hover:border-blue-500/20"
+                      : "bg-slate-50 border-slate-100 text-blue-500/30 group-hover:text-blue-600 group-hover:border-blue-100"
+                  }`}
+                >
+                  <Quote size={16} fill="currentColor" className="opacity-80" />
+                </div>
+
+                <p
+                  className={`mb-8 text-[15px] leading-relaxed transition-colors duration-500 font-medium ${
+                    isDark ? "text-slate-300" : "text-slate-600"
+                  }`}
+                >
+                  {t.msg}
+                </p>
               </div>
 
-              <p className={`mb-8 text-lg leading-relaxed transition-colors duration-500 ${
-                theme === "dark" ? "text-gray-300" : "text-gray-600"
-              }`}>
-                {t.msg}
-              </p>
-
-              <div className="flex items-center gap-4">
-                {/* Custom Avatar Gradient */}
-                <div className={`flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-tr ${t.color} text-sm font-bold text-white shadow-lg`}>
+              {/* User Bio */}
+              <div className="flex items-center gap-4 border-t pt-6 transition-colors duration-500 border-slate-200/40 dark:border-white/[0.04]">
+                <div
+                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr ${t.color} text-xs font-black text-white shadow-md`}
+                >
                   {t.initials}
                 </div>
 
-                <div className="text-left">
-                  <h4 className={`font-bold tracking-wide transition-colors duration-500 ${
-                    theme === "dark" ? "text-white" : "text-gray-900"
-                  }`}>
+                <div className="text-left overflow-hidden">
+                  <h4
+                    className={`font-bold text-sm tracking-wide transition-colors duration-500 truncate ${
+                      isDark ? "text-white" : "text-slate-900"
+                    }`}
+                  >
                     {t.name}
                   </h4>
-                  <p className={`text-sm transition-colors duration-500 ${
-                    theme === "dark" ? "text-gray-500" : "text-gray-500"
-                  }`}>
+                  <p className="text-xs text-slate-400 font-medium truncate">
                     {t.role}
                   </p>
                 </div>
               </div>
 
-              {/* Bottom accent line on hover */}
-              <div className="absolute bottom-0 left-0 h-1 w-0 bg-gradient-to-r from-transparent via-blue-500 to-transparent transition-all duration-500 group-hover:w-full" />
-            </div>
+              {/* Edge light gradient line on hover */}
+              <div
+                className="absolute bottom-0 left-6 right-6 h-[2px] w-0 transition-all duration-700 group-hover:w-[calc(100%-48px)] mx-auto rounded-full bg-gradient-to-r from-transparent via-blue-500 to-transparent"
+              />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        {/* Optional: Secondary CTA for trust */}
-        <div className="mt-16 text-center">
-          <p className={`transition-colors duration-500 ${
-            theme === "dark" ? "text-gray-500" : "text-gray-500"
-          }`}>
-            Join <span className={`font-semibold transition-colors duration-500 ${
-              theme === "dark" ? "text-white" : "text-gray-900"
-            }`}>500+</span> teams scaling their dreams.
+        {/* TRUST BANNER FOOTER */}
+        <div className="mt-20 text-center">
+          <p className="text-xs text-slate-400 tracking-wider font-medium">
+            Join <span className={`font-black tracking-normal ${isDark ? "text-white" : "text-slate-900"}`}>500+</span> technology teams scaling operations.
           </p>
         </div>
       </div>

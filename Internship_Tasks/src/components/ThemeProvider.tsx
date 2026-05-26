@@ -8,41 +8,53 @@ import {
   ReactNode,
 } from "react";
 
-// Context initialize karein (Default values ke saath)
-export const ThemeContext = createContext({
-  theme: "dark",
-  toggleTheme: () => {},
-});
+// 1. Types define karein strict compliance ke liye
+type Theme = "dark" | "light";
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState("dark");
-  const [mounted, setMounted] = useState(false);
+interface ThemeContextType {
+  theme: Theme;
+  toggleTheme: () => void;
+}
 
-  // Initial load par theme check karein
+// 2. Context initialize karein strict type configuration ke saath
+export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+interface ThemeProviderProps {
+  children: ReactNode;
+}
+
+export function ThemeProvider({ children }: ThemeProviderProps) {
+  const [theme, setTheme] = useState<Theme>("dark");
+  const [mounted, setMounted] = useState<boolean>(false);
+
+  // Initial load par local storage aur system preference lookups synchronize karein
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
+    const savedTheme = localStorage.getItem("theme") as Theme | null;
+    const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
 
-    if (savedTheme) {
+    if (savedTheme === "dark" || savedTheme === "light") {
       setTheme(savedTheme);
-    } else if (!prefersDark) {
+    } else if (prefersLight) {
       setTheme("light");
     }
+    
     setMounted(true);
   }, []);
 
-  // Theme change hone par DOM aur Storage update karein
+  // Theme change hone par structural DOM configurations map karein
   useEffect(() => {
     if (!mounted) return;
 
     const root = document.documentElement;
+    
     if (theme === "dark") {
       root.classList.add("dark");
+      root.style.colorScheme = "dark"; // Smooth browser scrollbar themes maintain karne ke liye
     } else {
       root.classList.remove("dark");
+      root.style.colorScheme = "light";
     }
+    
     localStorage.setItem("theme", theme);
   }, [theme, mounted]);
 
@@ -52,12 +64,21 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      {children}
+      {/* Dynamic wrapper component loading loops avoid karne ke liye content layer */}
+      <div className={mounted ? "contents" : "opacity-0 transition-opacity duration-300"}>
+        {children}
+      </div>
     </ThemeContext.Provider>
   );
 }
 
-// Custom hook for easy access
-export function useTheme() {
-  return useContext(ThemeContext);
+// 3. Custom hook with strong error handling boundary
+export function useTheme(): ThemeContextType {
+  const context = useContext(ThemeContext);
+  
+  if (context === undefined) {
+    throw new Error("useTheme must be strictly executed within a valid <ThemeProvider /> context element boundary.");
+  }
+  
+  return context;
 }

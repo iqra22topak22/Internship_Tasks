@@ -5,8 +5,8 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Users as UsersIcon, Search, Filter, MoreVertical, 
-  MapPin, Plus, Download, ChevronRight, LayoutDashboard,
-  FileText, Component, Activity, Command, Menu, X // Added Menu & X
+  MapPin, Plus, Download, LayoutDashboard,
+  FileText, Component, Activity, Command, Menu, X 
 } from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
 
@@ -20,6 +20,7 @@ const mockUsers = [
 
 export default function UsersPage() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -32,50 +33,99 @@ export default function UsersPage() {
     { name: "Live Feed", href: "/realtime-ui", icon: Activity },
   ];
 
+  // Helper component to avoid repeating the menu mapping block
+  const SidebarContent = () => (
+    <>
+      <nav className="space-y-2 flex-1 pt-12">
+        {sidebarLinks.map((link) => (
+          <Link 
+            key={link.name} 
+            href={link.href}
+            onClick={() => setIsOpen(false)}
+            className={`flex items-center justify-between p-3 rounded-2xl transition-all group ${
+              link.active 
+              ? (isDark ? "bg-blue-600/10 text-blue-400 border border-blue-500/20" : "bg-blue-50 text-blue-600 border border-blue-200")
+              : (isDark ? "hover:bg-white/5 text-slate-500 hover:text-slate-200" : "hover:bg-gray-100 text-slate-500 hover:text-slate-900")
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <link.icon size={18} className={link.active ? "text-blue-400" : "opacity-50"} />
+              <span className="text-[11px] font-black uppercase tracking-widest">{link.name}</span>
+            </div>
+            {link.active && <div className="w-1.5 h-1.5 rounded-full bg-blue-400 shadow-[0_0_8px_rgba(96,165,250,0.8)]" />}
+          </Link>
+        ))}
+      </nav>
+
+      <div className={`p-4 border rounded-[24px] transition-colors ${
+        isDark ? "bg-white/[0.02] border-white/5" : "bg-gray-100 border-gray-200"
+      }`}>
+        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2">System Status</p>
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className={`text-xs font-bold uppercase ${isDark ? "text-slate-300" : "text-slate-700"}`}>Operational</span>
+        </div>
+      </div>
+    </>
+  );
+
   return (
-    <div className={`flex min-h-screen transition-colors duration-500 font-sans selection:bg-blue-500/30 pt-20 ${
+    <div className={`flex min-h-screen transition-colors duration-500 font-sans selection:bg-blue-500/30 pt-20 relative ${
       isDark ? "bg-[#020617] text-slate-300" : "bg-slate-50 text-slate-900"
     }`}>
       
-      {/* 1. PREMIUM SIDEBAR NAV (Preserved exactly for Desktop screens) */}
-      <aside className={`w-72 border-r sticky top-0 h-screen hidden lg:flex flex-col p-6 transition-colors duration-500 ${
-        isDark ? "border-white/5 bg-[#020617]" : "border-gray-200 bg-white"
-      }`}>
-        {/* Logo area removed as it's handled by global Navbar */}
+      {/* HAMBURGER TRIGGER BUTTON FOR MOBILE SCREENS */}
+      <div className="lg:hidden fixed top-24 left-6 z-50">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className={`p-3 border rounded-2xl shadow-xl transition-all backdrop-blur-md active:scale-95 ${
+            isDark 
+              ? "bg-slate-900/80 border-white/10 text-white hover:bg-slate-800" 
+              : "bg-white/80 border-slate-200 text-slate-900 hover:bg-slate-50"
+          }`}
+        >
+          {isOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
+      </div>
 
-        <nav className="space-y-2 flex-1 pt-12">
-          {sidebarLinks.map((link) => (
-            <Link 
-              key={link.name} 
-              href={link.href}
-              className={`flex items-center justify-between p-3 rounded-2xl transition-all group ${
-                link.active 
-                ? (isDark ? "bg-blue-600/10 text-blue-400 border border-blue-500/20" : "bg-blue-50 text-blue-600 border border-blue-200")
-                : (isDark ? "hover:bg-white/5 text-slate-500 hover:text-slate-200" : "hover:bg-gray-100 text-slate-500 hover:text-slate-900")
+      {/* MOBILE DRAWER PORTAL HUD */}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* Ambient Backdrop Overlay layer */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+              className="fixed inset-0 bg-black/40 backdrop-blur-md z-40 lg:hidden"
+            />
+
+            {/* Sliding Panel Layer */}
+            <motion.aside
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className={`fixed left-0 top-0 bottom-0 w-72 z-40 flex flex-col p-6 pt-36 border-r transition-colors duration-500 lg:hidden ${
+                isDark ? "border-white/5 bg-[#020617]" : "border-gray-200 bg-white"
               }`}
             >
-              <div className="flex items-center gap-3">
-                <link.icon size={18} className={link.active ? "text-blue-400" : "opacity-50"} />
-                <span className="text-[11px] font-black uppercase tracking-widest">{link.name}</span>
-              </div>
-              {link.active && <div className="w-1.5 h-1.5 rounded-full bg-blue-400 shadow-[0_0_8px_rgba(96,165,250,0.8)]" />}
-            </Link>
-          ))}
-        </nav>
-
-        <div className={`p-4 border rounded-[24px] transition-colors ${
-          isDark ? "bg-white/[0.02] border-white/5" : "bg-gray-100 border-gray-200"
-        }`}>
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2">System Status</p>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className={`text-xs font-bold uppercase ${isDark ? "text-slate-300" : "text-slate-700"}`}>Operational</span>
-          </div>
-        </div>
+              <SidebarContent />
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+      
+      {/* DESKTOP PREMIUM SIDEBAR NAV */}
+      <aside className={`w-72 border-r sticky top-20 h-[calc(100vh-5rem)] hidden lg:flex flex-col p-6 transition-colors duration-500 ${
+        isDark ? "border-white/5 bg-[#020617]" : "border-gray-200 bg-white"
+      }`}>
+        <SidebarContent />
       </aside>
 
-      {/* 2. MAIN CONTENT AREA */}
-      <main className="flex-1 p-8 lg:p-12 relative pt-24 lg:pt-12">
+      {/* MAIN REGISTRY INTERFACE CONTAINER */}
+      <main className="flex-1 p-8 lg:p-12 relative pt-36 lg:pt-12 overflow-hidden">
         {/* Dynamic Glows */}
         <div className={`absolute top-0 right-0 w-[500px] h-[500px] blur-[120px] pointer-events-none transition-opacity duration-1000 ${
           isDark ? "bg-blue-600/5" : "bg-blue-400/10"
@@ -153,7 +203,7 @@ export default function UsersPage() {
                   </tr>
                 </thead>
                 <tbody className={`divide-y ${isDark ? "divide-white/5" : "divide-slate-100"}`}>
-                  {mockUsers.map((user, idx) => (
+                  {mockUsers.filter(user => user.name.toLowerCase().includes(searchTerm.toLowerCase())).map((user, idx) => (
                     <motion.tr
                       key={user.id}
                       initial={{ opacity: 0 }}
